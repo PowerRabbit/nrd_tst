@@ -5,55 +5,10 @@
             <!-- Slider -->
             <div class="swiper-container">
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide">
+                    <div class="swiper-slide" ng-repeat="slide in data.apps">
                         <div class="content-block">
                             <div class="row">
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="content-block">
-                            <div class="row">
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
-                                <div class="col-20"><div class="img_wrapper"><img src="images/icons/bank.svg"></div><span>Application Name</span></div>
+                                <div ng-repeat="app in slide" class="{{'col-' + data.col}}"><div ng-show="app.img !== ''" class="img_wrapper"><img src="{{app.img}}"></div><span>{{app.title}}</span></div>
                             </div>
                         </div>
                     </div>
