@@ -11,9 +11,12 @@
         DOWN_EVENT_NAME = 'mousedown',
         UP_EVENT_NAME = 'mouseup',
         STORAGE_NAME = 'homeScreen',
+        ALL_APPS_DATA = [{img:'images/icons/airplane.svg',title:'Application #1'},{img:'images/icons/bank.svg',title:'Application #2'},{img:'images/icons/beacon.svg',title:'Application #3'},{img:'images/icons/beats.svg',title:'Application #4'},{img:'images/icons/bell.svg',title:'Application #5'},{img:'images/icons/bicycle.svg',title:'Application #6'},{img:'images/icons/box.svg',title:'Application #7'},{img:'images/icons/browser.svg',title:'Application #8'},{img:'images/icons/bulb.svg',title:'Application #9'},{img:'images/icons/casino.svg',title:'Application #10'},{img:'images/icons/chair.svg',title:'Application #11'},{img:'images/icons/config.svg',title:'Application #12'},{img:'images/icons/cup.svg',title:'Application #13'},{img:'images/icons/folder.svg',title:'Application #14'},{img:'images/icons/football.svg',title:'Application #15'},{img:'images/icons/headphones.svg',title:'Application #16'},{img:'images/icons/heart.svg',title:'Application #17'},{img:'images/icons/laptop.svg',title:'Application #18'},{img:'images/icons/letter.svg',title:'Application #19'},{img:'images/icons/like.svg',title:'Application #20'},{img:'images/icons/map.svg',title:'Application #21'},{img:'images/icons/medal.svg',title:'Application #22'},{img:'images/icons/mic.svg',title:'Application #23'},{img:'images/icons/milk.svg',title:'Application #24'},{img:'images/icons/pencil.svg',title:'Application #25'},{img:'images/icons/picture.svg',title:'Application #26'},{img:'images/icons/polaroid.svg',title:'Application #27'},{img:'images/icons/printer.svg',title:'Application #28'},{img:'images/icons/search.svg',title:'Application #29'},{img:'images/icons/shopping_bag.svg',title:'Application #30'},{img:'images/icons/speed.svg',title:'Application #31'},{img:'images/icons/stopwatch.svg',title:'Application #32'},{img:'images/icons/tactics.svg',title:'Application #33'},{img:'images/icons/tweet.svg',title:'Application #34'},{img:'images/icons/watch.svg',title:'Application #35'}],
         
         wobbling = false,
         action_first = false,
+        is_home_init = false,
+        myApp,
         getOrientation,
         setAppData,
         getAppData,
@@ -40,7 +43,7 @@
         var app_data = JSON.parse(localStorage.getItem(STORAGE_NAME));
 
         if (!app_data) {
-            app_data = [{img:'images/icons/airplane.svg',title:'Application #1'},{img:'images/icons/bank.svg',title:'Application #2'},{img:'images/icons/beacon.svg',title:'Application #3'},{img:'images/icons/beats.svg',title:'Application #4'},{img:'images/icons/bell.svg',title:'Application #5'},{img:'images/icons/bicycle.svg',title:'Application #6'},{img:'images/icons/box.svg',title:'Application #7'},{img:'images/icons/browser.svg',title:'Application #8'},{img:'images/icons/bulb.svg',title:'Application #9'},{img:'images/icons/casino.svg',title:'Application #10'},{img:'images/icons/chair.svg',title:'Application #11'},{img:'images/icons/config.svg',title:'Application #12'},{img:'images/icons/cup.svg',title:'Application #13'},{img:'images/icons/folder.svg',title:'Application #14'},{img:'images/icons/football.svg',title:'Application #15'},{img:'images/icons/headphones.svg',title:'Application #16'},{img:'images/icons/heart.svg',title:'Application #17'},{img:'images/icons/laptop.svg',title:'Application #18'},{img:'images/icons/letter.svg',title:'Application #19'},{img:'images/icons/like.svg',title:'Application #20'},{img:'images/icons/map.svg',title:'Application #21'},{img:'images/icons/medal.svg',title:'Application #22'},{img:'images/icons/mic.svg',title:'Application #23'},{img:'images/icons/milk.svg',title:'Application #24'},{img:'images/icons/pencil.svg',title:'Application #25'},{img:'images/icons/picture.svg',title:'Application #26'},{img:'images/icons/polaroid.svg',title:'Application #27'},{img:'images/icons/printer.svg',title:'Application #28'},{img:'images/icons/search.svg',title:'Application #29'},{img:'images/icons/shopping_bag.svg',title:'Application #30'},{img:'images/icons/speed.svg',title:'Application #31'},{img:'images/icons/stopwatch.svg',title:'Application #32'},{img:'images/icons/tactics.svg',title:'Application #33'},{img:'images/icons/tweet.svg',title:'Application #34'},{img:'images/icons/watch.svg',title:'Application #35'}];
+            app_data = ALL_APPS_DATA;
         }
         
         
@@ -61,13 +64,14 @@
     });
 
     homeScreen.controller('mainController', ['$scope','$route','$window', function($scope, $route, $window) {
-        var myApp = new $window.Framework7(),        
-            prepareData,
+        var prepareData,
             bindEventsOnIcons,
         
             mySwiper,
             decorationsAndEvents;
 
+        myApp = new $window.Framework7();
+            
         bindEventsOnIcons = function () {
             var timeout;
             
@@ -165,9 +169,9 @@
         $scope.data = prepareData();
         $scope.reserved_data = JSON.parse(JSON.stringify($scope.data));
 
-        if (!$scope.is_init) {
+        if (!is_home_init) {
             setTimeout($scope.decorationsAndEvents, 500);
-            $scope.is_init = true;
+            is_home_init = true;
         }
     }]);
 
@@ -187,12 +191,14 @@
                         $scope.data.apps.forEach(function (item, key) {
                             item.forEach(function (el, k) {
                                 if (app.$$hashKey === el.$$hashKey) {
-                                    delete $scope.reserved_data.apps[key][k];
-                                    $scope.saveApps();
+                                    myApp.confirm('Are you sure?', function () {
+                                        elt.html('');
+                                        delete $scope.reserved_data.apps[key][k];
+                                        $scope.saveApps();
+                                    });
                                 }
                             });
                         });                        
-                        elt.html('');
                     }
                 };
             }
@@ -213,6 +219,17 @@
                         $scope.$route.reload();
                         setTimeout($scope.decorationsAndEvents, 500); 
                     }
+                };
+            }
+        }
+    });
+    
+    homeScreen.directive('goToSettings', function() {
+        return {
+            link: function($scope, elt, attrs) {
+                $scope.goToSettings = function() {
+                    is_home_init = false;
+                    window.location.hash = '/appstore';
                 };
             }
         }
