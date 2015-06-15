@@ -1,3 +1,21 @@
-<div>
-    <p>{{ message }}</p>
+<div class="navbar">
+    <div class="navbar-inner">
+        <div class="left"><a href="#/">&lt; Back</a></div>        
+    </div>
+</div>
+<div class="content-block-title">Available applications</div>
+<div class="list-block">
+    <ul class="app-list">    
+        <li ng-repeat="app in apps">
+            <label class="label-checkbox item-content">        
+            <input type="checkbox" name="my-checkbox" ng-model=app.selected>
+            <div class="item-media">
+                <i class="icon icon-form-checkbox"></i>
+            </div>
+            <div class="item-inner">
+                <div class="item-title">{{app.title}}</div>
+            </div>
+            </label>
+        </li>
+    </ul>
 </div>

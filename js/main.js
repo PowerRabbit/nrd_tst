@@ -36,17 +36,13 @@
     };
     
     setAppData = function (data) {
-        localStorage.setItem(STORAGE_NAME, JSON.stringify(data));
+        //localStorage.setItem(STORAGE_NAME, JSON.stringify(data));
+        localStorage.setItem(STORAGE_NAME, angular.toJson(data));
     };
     
     getAppData = function () {
-        var app_data = JSON.parse(localStorage.getItem(STORAGE_NAME));
+        var app_data = JSON.parse(localStorage.getItem(STORAGE_NAME)) || [];
 
-        if (!app_data) {
-            app_data = ALL_APPS_DATA;
-        }
-        
-        
         return app_data;
     };
     
@@ -75,30 +71,32 @@
         bindEventsOnIcons = function () {
             var timeout;
             
-            $scope.swiper_wrapper.addEventListener(DOWN_EVENT_NAME, function (e) {
-                var target = e.target;
+            if ($scope.swiper_wrapper) {
+                $scope.swiper_wrapper.addEventListener(DOWN_EVENT_NAME, function (e) {
+                    var target = e.target;
 
-                if (!wobbling) {                
-                    while (target !== $scope.swiper_wrapper) {
-                        if (target.className === 'img_wrapper') {
-                            action_first = true;
-                            timeout = setTimeout(function () {                            
-                                $scope.swiper_wrapper.className += ' wobble';
-                                wobbling = true;
-                            }, 1500);
-                            return;
+                    if (!wobbling) {                
+                        while (target !== $scope.swiper_wrapper) {
+                            if (target.className === 'img_wrapper') {
+                                action_first = true;
+                                timeout = setTimeout(function () {                            
+                                    $scope.swiper_wrapper.className += ' wobble';
+                                    wobbling = true;
+                                }, 1500);
+                                return;
+                            }
+                            target = target.parentNode;
                         }
-                        target = target.parentNode;
                     }
-                }
-            }, false);
-            $scope.swiper_wrapper.addEventListener(UP_EVENT_NAME, function (e) {
-                var target = e.target;
-                setTimeout(function () {
-                    action_first = false;
-                }, 50);
-                clearTimeout(timeout);
-            }, false);
+                }, false);
+                $scope.swiper_wrapper.addEventListener(UP_EVENT_NAME, function (e) {
+                    var target = e.target;
+                    setTimeout(function () {
+                        action_first = false;
+                    }, 50);
+                    clearTimeout(timeout);
+                }, false);
+            }
         };
             
         prepareData = function () {
@@ -169,14 +167,37 @@
         $scope.data = prepareData();
         $scope.reserved_data = JSON.parse(JSON.stringify($scope.data));
 
-        if (!is_home_init) {
+        if (!is_home_init && window.location.hash === '#/') {
             setTimeout($scope.decorationsAndEvents, 500);
             is_home_init = true;
         }
     }]);
 
     homeScreen.controller('storeController', function($scope) {
+        var selectedApps = getAppData(),
+            all_apps = JSON.parse(JSON.stringify(ALL_APPS_DATA));
+        
+        selectedApps.forEach(function (item1) {
+            all_apps.forEach(function (item2, k) {
+                if (item1.title === item2.title) {
+                    item2.selected = true;
+                }
+            });
+        });
 
+        $scope.apps = all_apps;
+        $scope.$watch('apps', function (a) {
+            var data = JSON.parse(angular.toJson(a)),
+                new_data = [];
+            
+            data.forEach(function (item) {
+                if (item.selected) {
+                    new_data.push(item);
+                }
+            });
+            setAppData(new_data);
+        }, true);
+        
     });
     
     homeScreen.directive('removeOnClick', function() {
@@ -191,7 +212,7 @@
                         $scope.data.apps.forEach(function (item, key) {
                             item.forEach(function (el, k) {
                                 if (app.$$hashKey === el.$$hashKey) {
-                                    myApp.confirm('Are you sure?', function () {
+                                    myApp.confirm(' ', 'Are you sure?', function () {
                                         elt.html('');
                                         delete $scope.reserved_data.apps[key][k];
                                         $scope.saveApps();

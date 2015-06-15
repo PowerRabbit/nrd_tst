@@ -146,6 +146,11 @@ html, body {
     }
 }
 
+.app-list {
+    overflow: auto;
+    height: 300px;
+}
+
 @media (max-width: 600px) {
     .main_screen .swiper-wrapper {
         width: 300px;
