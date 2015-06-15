@@ -3,17 +3,17 @@
     'use strict';
 
     var homeScreen = angular.module('homeScreen', ['ngRoute']),
+        document = window.document,
     
         LANDSCAPE = 'landscape',
         PORTRAIT = 'portrait',
         APPS_PER_SCREEN = 20,
+        DOWN_EVENT_NAME = 'mousedown',
+        UP_EVENT_NAME = 'mouseup',
         
         getOrientation,
         getAppData,
         app_data;
-
-    
-    
 
     getOrientation = function () {
         var orientation = window.orientation || 90,
@@ -48,13 +48,42 @@
             })
     });
 
-    homeScreen.controller('mainController', function($scope, $window) {
+    homeScreen.controller('mainController', ['$scope','$route','$window', function($scope, $route, $window) {
         var myApp = new $window.Framework7(),        
-            prepareData,            
+            prepareData,
+            bindEventsOnIcons,
         
             mySwiper,
-            createParallax;
+            decorationsAndEvents;
 
+        bindEventsOnIcons = function () {
+            var timeout;
+            
+            $scope.swiper_wrapper.addEventListener(DOWN_EVENT_NAME, function (e) {
+                var target = e.target;
+
+                if ($scope.swiper_wrapper.className.indexOf('wobble') === -1) {                
+                    while (target !== $scope.swiper_wrapper) {
+                        if (target.className === 'img_wrapper') {
+                            $scope.action_first = true;
+                            timeout = setTimeout(function () {                            
+                                $scope.swiper_wrapper.className += ' wobble';
+                            }, 1500);
+                            return;
+                        }
+                        target = target.parentNode;
+                    }
+                }
+            }, false);
+            $scope.swiper_wrapper.addEventListener(UP_EVENT_NAME, function (e) {
+                var target = e.target;
+                setTimeout(function () {
+                    $scope.action_first = false;
+                }, 50);
+                clearTimeout(timeout);
+            }, false);
+        };
+            
         prepareData = function () {
             var data = {},
                 temp_apps = getAppData(),
@@ -94,23 +123,67 @@
             return data;
         };
             
-        createParallax = function () {
+        decorationsAndEvents = function () {
             var scene = document.querySelector('.page-content'),
                 parallax = new $window.Parallax(scene);
-                
                 
             mySwiper = myApp.swiper('.swiper-container', {
                 pagination:'.swiper-pagination'
             });
+            
+            $scope.swiper_wrapper = document.querySelector('.swiper-wrapper');
+            bindEventsOnIcons();
         };
         
+        $scope.$route = $route;
         $scope.data = prepareData();
 
-        setTimeout(createParallax, 500);
-    });
+        if (!$scope.is_init) {
+            setTimeout(decorationsAndEvents, 500);
+            $scope.is_init = true;
+        }
+    }]);
 
     homeScreen.controller('storeController', function($scope) {
 
+    });
+    
+    homeScreen.directive('removeOnClick', function() {
+        return {
+            link: function($scope, elt, attrs) {
+                var app;
+                $scope.remove = function() {
+                    if ($scope.swiper_wrapper.className.indexOf('wobble') !== -1 && !$scope.action_first) {
+                        app = this.app;
+
+                        $scope.data.apps.forEach(function (item) {
+                            item.forEach(function (el) {
+                                if (app.$$hashKey === el.$$hashKey) {
+                                    console.log($scope.$route);
+                                }
+                            });
+                        });
+                        elt.html('');
+                    }
+                };
+            }
+        }
+    });
+    
+    homeScreen.directive('restoreOnClick', function() {
+        return {
+            link: function($scope, elt, attrs) {
+                var position,
+                    new_class;
+                $scope.restore_state = function() {
+                    if ($scope.swiper_wrapper.className.indexOf('wobble') !== -1) {
+                        position = $scope.swiper_wrapper.className.indexOf(' wobble');
+                        new_class = $scope.swiper_wrapper.className.substr(0, position);
+                        $scope.swiper_wrapper.className = new_class;
+                    }
+                };
+            }
+        }
     });
 
 }());

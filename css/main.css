@@ -92,6 +92,60 @@ html, body {
     height: 100%;
 }
 
+.swiper-slide .row > div {
+    animation-delay: -0.15s;
+    animation-duration: .25s
+}
+
+.wobble .swiper-slide .row .img_wrapper:before {
+    background: #fff;
+    border-radius: 25px;
+    content: 'x';
+    display: block;
+    line-height: 170%;
+    font-weight: bold;
+    margin: -5px 0 0 -5px;
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+}
+
+.wobble .swiper-slide .row > div:nth-child(2n) {
+    animation-name: keyframes1;
+    animation-iteration-count: infinite;
+    transform-origin: 50% 10%;
+}
+ 
+.wobble .swiper-slide .row > div:nth-child(2n-1) {
+    animation-name: keyframes2;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    transform-origin: 30% 5%;
+}
+ 
+@keyframes keyframes1 {
+    0% {
+        transform: rotate(-1deg);
+        animation-timing-function: ease-in;
+    }
+    50% {
+        transform: rotate(1.5deg);
+        animation-timing-function: ease-out;
+    }
+}
+ 
+@keyframes keyframes2 {
+    0% {
+        transform: rotate(1deg);
+        animation-timing-function: ease-in;
+    }
+    50% {
+        transform: rotate(-1.5deg);
+        animation-timing-function: ease-out;
+    }
+}
+
 @media (max-width: 600px) {
     .main_screen .swiper-wrapper {
         width: 300px;

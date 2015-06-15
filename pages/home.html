@@ -8,7 +8,7 @@
                     <div class="swiper-slide" ng-repeat="slide in data.apps">
                         <div class="content-block">
                             <div class="row">
-                                <div ng-repeat="app in slide" class="{{'col-' + data.col}}"><div ng-show="app.img !== ''" class="img_wrapper"><img src="{{app.img}}"></div><span>{{app.title}}</span></div>
+                                <div remove-on-click ng-click="remove()" ng-repeat="app in slide" class="{{'col-' + data.col}}"><div ng-show="app.img !== ''" class="img_wrapper"><img src="{{app.img}}"></div><span>{{app.title}}</span></div>
                             </div>
                         </div>
                     </div>
@@ -17,7 +17,7 @@
             </div>
         </section>
     </div>
-    <div class="table_tr for_footer">
+    <div class="table_tr for_footer" restore-on-click ng-click="restore_state()">
         <div class="smooth_footer">
             <div class="content-block">
                 <div class="row">
